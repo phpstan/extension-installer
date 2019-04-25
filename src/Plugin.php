@@ -4,10 +4,10 @@ namespace PHPStan\ExtensionInstaller;
 
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
-use Composer\Installer\PackageEvent;
-use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
+use Composer\Script\Event;
+use Composer\Script\ScriptEvents;
 
 final class Plugin implements PluginInterface, EventSubscriberInterface
 {
@@ -42,13 +42,12 @@ PHP;
 	public static function getSubscribedEvents(): array
 	{
 		return [
-			PackageEvents::POST_PACKAGE_INSTALL => 'process',
-			PackageEvents::POST_PACKAGE_UPDATE => 'process',
-			PackageEvents::POST_PACKAGE_UNINSTALL => 'process',
+			ScriptEvents::POST_INSTALL_CMD => 'process',
+			ScriptEvents::POST_UPDATE_CMD => 'process',
 		];
 	}
 
-	public function process(PackageEvent $event): void
+	public function process(Event $event): void
 	{
 		$io = $event->getIO();
 		$composer = $event->getComposer();
