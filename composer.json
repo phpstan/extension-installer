@@ -1,0 +1,20 @@
+{
+    "name": "phpstan/extension-installer",
+    "description": "",
+    "type": "composer-plugin",
+    "require": {
+        "php": "^7.1",
+        "composer-plugin-api": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "PHPStan\\ExtensionInstaller\\": "src/"
+        }
+    },
+    "extra": {
+        "class": "PHPStan\\ExtensionInstaller\\Plugin"
+    },
+    "require-dev": {
+        "composer/composer": "^1.8"
+    }
+}
