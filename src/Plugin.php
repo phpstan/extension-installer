@@ -51,18 +51,21 @@ PHP;
 	{
 		$io = $event->getIO();
 		$composer = $event->getComposer();
+		$installationManager = $composer->getInstallationManager();
 
 		$data = [];
 		foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
 			if ($package->getType() !== 'phpstan-extension') {
 				continue;
 			}
-			$data[$package->getName()] = $package->getExtra()['phpstan'] ?? null;
+			$data[$package->getName()] = [
+				'install_path' => $installationManager->getInstallPath($package),
+				'extra' => $package->getExtra()['phpstan'] ?? null,
+			];
 		}
 
-		$io->write('<info>phpstan/extension-installer:</info> Generating extension class...');
 		file_put_contents(__DIR__ . '/Extensions.php', sprintf(self::$generatedFileTemplate, var_export($data, true)));
-		$io->write('<info>phpstan/extension-installer:</info> ...done generating extension class');
+		$io->write('<info>phpstan/extension-installer:</info> Extension config generated');
 	}
 
 }
