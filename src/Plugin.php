@@ -52,19 +52,13 @@ PHP;
 	{
 		$io = $event->getIO();
 		$composer = $event->getComposer();
-		$installationManager = $composer->getInstallationManager();
 
 		$data = [];
 		foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
 			if ($package->getType() !== 'phpstan-extension') {
 				continue;
 			}
-			$name = $package->getName();
-			$data[$name] = [
-				'name' => $name,
-				'install_path' => $installationManager->getInstallPath($package),
-				'extra' => $package->getExtra()['phpstan'] ?? null,
-			];
+			$data[$package->getName()] = $package->getExtra()['phpstan'] ?? null;
 		}
 
 		$io->write('<info>phpstan/extension-installer:</info> Generating extension class...');
