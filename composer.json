@@ -1,6 +1,6 @@
 {
     "name": "phpstan/extension-installer",
-    "description": "",
+    "description": "Composer plugin for automatic installation of PHPStan extensions",
     "type": "composer-plugin",
     "require": {
         "php": "^7.1",
