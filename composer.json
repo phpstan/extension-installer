@@ -4,7 +4,8 @@
     "type": "composer-plugin",
     "require": {
         "php": "^7.1",
-        "composer-plugin-api": "^1.1"
+        "composer-plugin-api": "^1.1",
+        "phpstan/phpstan": ">=0.11.6"
     },
     "autoload": {
         "psr-4": {
