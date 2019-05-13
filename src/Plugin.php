@@ -74,14 +74,14 @@ PHP;
 						'phpstan/extension-installer',
 					], true)
 				) {
-					$notInstalledPackages[$package->getName()] = $package->getPrettyVersion();
+					$notInstalledPackages[$package->getName()] = $package->getFullPrettyVersion();
 				}
 				continue;
 			}
 			$data[$package->getName()] = [
 				'install_path' => $installationManager->getInstallPath($package),
 				'extra' => $package->getExtra()['phpstan'] ?? null,
-				'version' => $package->getPrettyVersion(),
+				'version' => $package->getFullPrettyVersion(),
 			];
 
 			$installedPackages[$package->getName()] = true;
