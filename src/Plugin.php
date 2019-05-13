@@ -74,32 +74,30 @@ PHP;
 						'phpstan/extension-installer',
 					], true)
 				) {
-					$notInstalledPackages[] = $package->getName();
+					$notInstalledPackages[$package->getName()] = $package->getPrettyVersion();
 				}
 				continue;
 			}
 			$data[$package->getName()] = [
 				'install_path' => $installationManager->getInstallPath($package),
 				'extra' => $package->getExtra()['phpstan'] ?? null,
+				'version' => $package->getPrettyVersion(),
 			];
 
-			$installedPackages[] = $package->getName();
+			$installedPackages[$package->getName()] = true;
 		}
-
-		$installedPackages = array_unique($installedPackages);
-		$notInstalledPackages = array_unique($notInstalledPackages);
 
 		$generatedConfigFileContents = sprintf(self::$generatedFileTemplate, var_export($data, true), var_export($notInstalledPackages, true));
 		file_put_contents($generatedConfigFilePath, $generatedConfigFileContents);
 		$io->write('<info>phpstan/extension-installer:</info> Extensions installed');
 
 		if ($oldGeneratedConfigFileHash !== md5($generatedConfigFileContents)) {
-			foreach ($installedPackages as $installedPackage) {
-				$io->write(sprintf('> <info>%s:</info> installed', $installedPackage));
+			foreach ($installedPackages as $name => $true) {
+				$io->write(sprintf('> <info>%s:</info> installed', $name));
 			}
 
-			foreach ($notInstalledPackages as $notInstalledPackage) {
-				$io->write(sprintf('> <comment>%s:</comment> not supported', $notInstalledPackage));
+			foreach ($notInstalledPackages as $name => $version) {
+				$io->write(sprintf('> <comment>%s:</comment> not supported', $name));
 			}
 		}
 	}
