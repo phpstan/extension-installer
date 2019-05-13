@@ -89,9 +89,12 @@ PHP;
 		$io->write('<info>phpstan/extension-installer:</info> Extensions installed');
 
 		if ($oldGeneratedConfigFileHash !== md5($generatedConfigFileContents)) {
+			$installedPackages = array_unique($installedPackages);
 			foreach ($installedPackages as $installedPackage) {
 				$io->write(sprintf('> <info>%s:</info> installed', $installedPackage));
 			}
+
+			$notInstalledPackages = array_unique($notInstalledPackages);
 			foreach ($notInstalledPackages as $notInstalledPackage) {
 				$io->write(sprintf('> <comment>%s:</comment> not supported', $notInstalledPackage));
 			}
