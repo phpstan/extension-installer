@@ -26,6 +26,8 @@ final class GeneratedConfig
 
 	public const EXTENSIONS = %s;
 
+	public const NOT_INSTALLED = %s;
+
 	private function __construct()
 	{
 	}
@@ -84,17 +86,18 @@ PHP;
 			$installedPackages[] = $package->getName();
 		}
 
-		$generatedConfigFileContents = sprintf(self::$generatedFileTemplate, var_export($data, true));
+		$installedPackages = array_unique($installedPackages);
+		$notInstalledPackages = array_unique($notInstalledPackages);
+
+		$generatedConfigFileContents = sprintf(self::$generatedFileTemplate, var_export($data, true), var_export($notInstalledPackages, true));
 		file_put_contents($generatedConfigFilePath, $generatedConfigFileContents);
 		$io->write('<info>phpstan/extension-installer:</info> Extensions installed');
 
 		if ($oldGeneratedConfigFileHash !== md5($generatedConfigFileContents)) {
-			$installedPackages = array_unique($installedPackages);
 			foreach ($installedPackages as $installedPackage) {
 				$io->write(sprintf('> <info>%s:</info> installed', $installedPackage));
 			}
 
-			$notInstalledPackages = array_unique($notInstalledPackages);
 			foreach ($notInstalledPackages as $notInstalledPackage) {
 				$io->write(sprintf('> <comment>%s:</comment> not supported', $notInstalledPackage));
 			}
