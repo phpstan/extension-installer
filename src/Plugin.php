@@ -53,19 +53,42 @@ PHP;
 		$composer = $event->getComposer();
 		$installationManager = $composer->getInstallationManager();
 
+		$generatedConfigFilePath = __DIR__ . '/GeneratedConfig.php';
+		$oldGeneratedConfigFileHash = null;
+		if (is_file($generatedConfigFilePath)) {
+			$oldGeneratedConfigFileHash = md5_file($generatedConfigFilePath);
+		}
+		$notInstalledPackages = [];
+		$installedPackages = [];
+
 		$data = [];
 		foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
 			if ($package->getType() !== 'phpstan-extension') {
+				if (strpos($package->getName(), 'phpstan') !== false) {
+					$notInstalledPackages[] = $package->getName();
+				}
 				continue;
 			}
 			$data[$package->getName()] = [
 				'install_path' => $installationManager->getInstallPath($package),
 				'extra' => $package->getExtra()['phpstan'] ?? null,
 			];
+
+			$installedPackages[] = $package->getName();
 		}
 
-		file_put_contents(__DIR__ . '/GeneratedConfig.php', sprintf(self::$generatedFileTemplate, var_export($data, true)));
-		$io->write('<info>phpstan/extension-installer:</info> Extension config generated');
+		$generatedConfigFileContents = sprintf(self::$generatedFileTemplate, var_export($data, true));
+		file_put_contents($generatedConfigFilePath, $generatedConfigFileContents);
+		$io->write('<info>phpstan/extension-installer:</info> Extensions installed');
+
+		if ($oldGeneratedConfigFileHash !== md5($generatedConfigFileContents)) {
+			foreach ($installedPackages as $installedPackage) {
+				$io->write(sprintf('> <info>%s:</info> installed', $installedPackage));
+			}
+			foreach ($notInstalledPackages as $notInstalledPackage) {
+				$io->write(sprintf('> <comment>%s:</comment> not supported', $notInstalledPackage));
+			}
+		}
 	}
 
 }
