@@ -64,7 +64,14 @@ PHP;
 		$data = [];
 		foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
 			if ($package->getType() !== 'phpstan-extension') {
-				if (strpos($package->getName(), 'phpstan') !== false) {
+				if (
+					strpos($package->getName(), 'phpstan') !== false
+					&& !in_array($package->getName(), [
+						'phpstan/phpstan',
+						'phpstan/phpdoc-parser',
+						'phpstan/extension-installer',
+					], true)
+				) {
 					$notInstalledPackages[] = $package->getName();
 				}
 				continue;
