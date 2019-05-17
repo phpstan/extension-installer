@@ -70,6 +70,7 @@ PHP;
 					strpos($package->getName(), 'phpstan') !== false
 					&& !in_array($package->getName(), [
 						'phpstan/phpstan',
+						'phpstan/phpstan-shim',
 						'phpstan/phpdoc-parser',
 						'phpstan/extension-installer',
 					], true)
