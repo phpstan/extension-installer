@@ -1,5 +1,9 @@
 # PHPStan Extension Installer
 
+[![Build Status](https://travis-ci.org/phpstan/extension-installer.svg?branch=master)](https://travis-ci.org/phpstan/extension-installer)
+[![Latest Stable Version](https://poser.pugx.org/phpstan/extension-installer/v/stable)](https://packagist.org/packages/phpstan/extension-installer)
+[![License](https://poser.pugx.org/phpstan/extension-installer/license)](https://packagist.org/packages/phpstan/extension-installer)
+
 Composer plugin for automatic installation of [PHPStan](https://github.com/phpstan/phpstan) extensions.
 
 # Motivation
