@@ -36,7 +36,7 @@ final class GeneratedConfig
 
 PHP;
 
-	public function activate(Composer $composer, IOInterface $io)
+	public function activate(Composer $composer, IOInterface $io): void
 	{
 		// noop
 	}
@@ -92,14 +92,16 @@ PHP;
 		file_put_contents($generatedConfigFilePath, $generatedConfigFileContents);
 		$io->write('<info>phpstan/extension-installer:</info> Extensions installed');
 
-		if ($oldGeneratedConfigFileHash !== md5($generatedConfigFileContents)) {
-			foreach ($installedPackages as $name => $true) {
-				$io->write(sprintf('> <info>%s:</info> installed', $name));
-			}
+		if ($oldGeneratedConfigFileHash === md5($generatedConfigFileContents)) {
+			return;
+		}
 
-			foreach ($notInstalledPackages as $name => $version) {
-				$io->write(sprintf('> <comment>%s:</comment> not supported', $name));
-			}
+		foreach (array_keys($installedPackages) as $name) {
+			$io->write(sprintf('> <info>%s:</info> installed', $name));
+		}
+
+		foreach (array_keys($notInstalledPackages) as $name) {
+			$io->write(sprintf('> <comment>%s:</comment> not supported', $name));
 		}
 	}
 
