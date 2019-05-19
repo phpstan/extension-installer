@@ -1,6 +1,9 @@
 {
     "name": "phpstan/extension-installer",
     "description": "Composer plugin for automatic installation of PHPStan extensions",
+    "license": [
+        "MIT"
+    ],
     "type": "composer-plugin",
     "require": {
         "php": "^7.1",
