@@ -8,6 +8,7 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use function file_exists;
 
 final class Plugin implements PluginInterface, EventSubscriberInterface
 {
@@ -53,6 +54,12 @@ PHP;
 	public function process(Event $event): void
 	{
 		$io = $event->getIO();
+
+		if (!file_exists(__DIR__)) {
+			$io->write('<info>phpstan/extension-installer:</info> Package not found (probably scheduled for removal); extensions installation skipped.');
+			return;
+		}
+
 		$composer = $event->getComposer();
 		$installationManager = $composer->getInstallationManager();
 
