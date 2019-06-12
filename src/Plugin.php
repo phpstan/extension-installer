@@ -18,7 +18,6 @@ use function md5_file;
 use function sprintf;
 use function strpos;
 use function var_export;
-use const __DIR__;
 
 final class Plugin implements PluginInterface, EventSubscriberInterface
 {
