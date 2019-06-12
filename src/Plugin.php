@@ -21,9 +21,8 @@ use function var_export;
 
 final class Plugin implements PluginInterface, EventSubscriberInterface
 {
-
-	/** @var string */
-	private static $generatedFileTemplate = <<<'PHP'
+    /** @var string */
+    private static $generatedFileTemplate = <<<'PHP'
 <?php declare(strict_types = 1);
 
 namespace PHPStan\ExtensionInstaller;
@@ -34,92 +33,96 @@ namespace PHPStan\ExtensionInstaller;
  */
 final class GeneratedConfig
 {
+    public const EXTENSIONS = %s;
 
-	public const EXTENSIONS = %s;
+    public const NOT_INSTALLED = %s;
 
-	public const NOT_INSTALLED = %s;
-
-	private function __construct()
-	{
-	}
-
+    private function __construct()
+    {
+    }
 }
 
 PHP;
 
-	public function activate(Composer $composer, IOInterface $io): void
-	{
-		// noop
-	}
+    public function activate(Composer $composer, IOInterface $io): void
+    {
+        // noop
+    }
 
-	public static function getSubscribedEvents(): array
-	{
-		return [
-			ScriptEvents::POST_INSTALL_CMD => 'process',
-			ScriptEvents::POST_UPDATE_CMD => 'process',
-		];
-	}
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            ScriptEvents::POST_INSTALL_CMD => 'process',
+            ScriptEvents::POST_UPDATE_CMD => 'process',
+        ];
+    }
 
-	public function process(Event $event): void
-	{
-		$io = $event->getIO();
+    public function process(Event $event): void
+    {
+        $io = $event->getIO();
 
-		if (!file_exists(__DIR__)) {
-			$io->write('<info>phpstan/extension-installer:</info> Package not found (probably scheduled for removal); extensions installation skipped.');
-			return;
-		}
+        if (!file_exists(__DIR__)) {
+            $io->write(
+                '<info>phpstan/extension-installer:</info> ' .
+                'Package not found (probably scheduled for removal); extensions installation skipped.'
+            );
+            return;
+        }
 
-		$composer = $event->getComposer();
-		$installationManager = $composer->getInstallationManager();
+        $composer = $event->getComposer();
+        $installationManager = $composer->getInstallationManager();
 
-		$generatedConfigFilePath = __DIR__ . '/GeneratedConfig.php';
-		$oldGeneratedConfigFileHash = null;
-		if (is_file($generatedConfigFilePath)) {
-			$oldGeneratedConfigFileHash = md5_file($generatedConfigFilePath);
-		}
-		$notInstalledPackages = [];
-		$installedPackages = [];
+        $generatedConfigFilePath = __DIR__ . '/GeneratedConfig.php';
+        $oldGeneratedConfigFileHash = null;
+        if (is_file($generatedConfigFilePath)) {
+            $oldGeneratedConfigFileHash = md5_file($generatedConfigFilePath);
+        }
+        $notInstalledPackages = [];
+        $installedPackages = [];
 
-		$data = [];
-		foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
-			if ($package->getType() !== 'phpstan-extension') {
-				if (
-					strpos($package->getName(), 'phpstan') !== false
-					&& !in_array($package->getName(), [
-						'phpstan/phpstan',
-						'phpstan/phpstan-shim',
-						'phpstan/phpdoc-parser',
-						'phpstan/extension-installer',
-					], true)
-				) {
-					$notInstalledPackages[$package->getName()] = $package->getFullPrettyVersion();
-				}
-				continue;
-			}
-			$data[$package->getName()] = [
-				'install_path' => $installationManager->getInstallPath($package),
-				'extra' => $package->getExtra()['phpstan'] ?? null,
-				'version' => $package->getFullPrettyVersion(),
-			];
+        $data = [];
+        foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
+            if ($package->getType() !== 'phpstan-extension') {
+                if (
+                    strpos($package->getName(), 'phpstan') !== false
+                    && !in_array($package->getName(), [
+                        'phpstan/phpstan',
+                        'phpstan/phpstan-shim',
+                        'phpstan/phpdoc-parser',
+                        'phpstan/extension-installer',
+                    ], true)
+                ) {
+                    $notInstalledPackages[$package->getName()] = $package->getFullPrettyVersion();
+                }
+                continue;
+            }
+            $data[$package->getName()] = [
+                'install_path' => $installationManager->getInstallPath($package),
+                'extra' => $package->getExtra()['phpstan'] ?? null,
+                'version' => $package->getFullPrettyVersion(),
+            ];
 
-			$installedPackages[$package->getName()] = true;
-		}
+            $installedPackages[$package->getName()] = true;
+        }
 
-		$generatedConfigFileContents = sprintf(self::$generatedFileTemplate, var_export($data, true), var_export($notInstalledPackages, true));
-		file_put_contents($generatedConfigFilePath, $generatedConfigFileContents);
-		$io->write('<info>phpstan/extension-installer:</info> Extensions installed');
+        $generatedConfigFileContents = sprintf(
+            self::$generatedFileTemplate,
+            var_export($data, true),
+            var_export($notInstalledPackages, true)
+        );
+        file_put_contents($generatedConfigFilePath, $generatedConfigFileContents);
+        $io->write('<info>phpstan/extension-installer:</info> Extensions installed');
 
-		if ($oldGeneratedConfigFileHash === md5($generatedConfigFileContents)) {
-			return;
-		}
+        if ($oldGeneratedConfigFileHash === md5($generatedConfigFileContents)) {
+            return;
+        }
 
-		foreach (array_keys($installedPackages) as $name) {
-			$io->write(sprintf('> <info>%s:</info> installed', $name));
-		}
+        foreach (array_keys($installedPackages) as $name) {
+            $io->write(sprintf('> <info>%s:</info> installed', $name));
+        }
 
-		foreach (array_keys($notInstalledPackages) as $name) {
-			$io->write(sprintf('> <comment>%s:</comment> not supported', $name));
-		}
-	}
-
+        foreach (array_keys($notInstalledPackages) as $name) {
+            $io->write(sprintf('> <comment>%s:</comment> not supported', $name));
+        }
+    }
 }
