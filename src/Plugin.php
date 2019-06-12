@@ -8,7 +8,17 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use function array_keys;
 use function file_exists;
+use function file_put_contents;
+use function in_array;
+use function is_file;
+use function md5;
+use function md5_file;
+use function sprintf;
+use function strpos;
+use function var_export;
+use const __DIR__;
 
 final class Plugin implements PluginInterface, EventSubscriberInterface
 {
