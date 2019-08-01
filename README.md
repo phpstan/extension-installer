@@ -48,6 +48,8 @@ composer require --dev phpstan/extension-installer
 
 And that's it.
 
+Please keep in mind that the generated config file is `.gitignore`'d so it will not be added to Git even when you have added your whole `vendor` folder.
+
 ## Instructions for extension developers
 
 Extension's composer package [type](https://getcomposer.org/doc/04-schema.md#type) has to be set to `phpstan-extension` for this plugin to be able to recognize it.
