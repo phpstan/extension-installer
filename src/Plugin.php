@@ -82,7 +82,10 @@ PHP;
 
 		$data = [];
 		foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
-			if ($package->getType() !== 'phpstan-extension') {
+			if (
+				$package->getType() !== 'phpstan-extension'
+				&& !isset($package->getExtra()['phpstan'])
+			) {
 				if (
 					strpos($package->getName(), 'phpstan') !== false
 					&& !in_array($package->getName(), [
