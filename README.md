@@ -67,3 +67,7 @@ For this, you have to add a `phpstan` key in the extension `composer.json`'s `ex
   }
 }
 ```
+
+## Limitations
+
+The extension installer depends on Composer script events, therefore you cannot use `--no-scripts` flag.
