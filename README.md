@@ -34,7 +34,7 @@ index 1b578dd624..f6ebf6e477 100644
  		"jakub-onderka/php-parallel-lint": "1.0.0",
  		"justinrainbow/json-schema": "5.2.8",
  		"ondrejmirtes/mocktainer": "0.8",
-+		"phpstan/extension-installer": "1.0",
++		"phpstan/extension-installer": "^1.0",
  		"phpstan/phpstan": "^0.11.7",
  		"phpstan/phpstan-doctrine": "^0.11.3",
  		"phpstan/phpstan-nette": "^0.11.1",
