@@ -1,0 +1,47 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+
+on:
+  - pull_request
+  - push
+
+name: "Continuous Integration"
+
+jobs:
+  continuous-integration:
+    name: "Continuous Integration"
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-binary:
+          - php7.1
+          - php7.2
+          - php7.3
+
+        dependencies:
+          - lowest
+          - highest
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2.0.0
+
+      - name: "Cache dependencies installed with composer"
+        uses: actions/cache@v1.0.3
+        with:
+          path: ~/.composer/cache
+          key: ${{ matrix.php-binary }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            ${{ matrix.php-binary }}-composer-${{ matrix.dependencies }}-
+
+      - name: "Install lowest dependencies with composer"
+        if: matrix.dependencies == 'lowest'
+        run: composer update --no-interaction --prefer-lowest
+
+      - name: "Install highest dependencies with composer"
+        if: matrix.dependencies == 'highest'
+        run: composer update --no-interaction
+
+      - name: "Run build with phing/phing"
+        run: vendor/bin/phing
