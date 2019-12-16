@@ -108,6 +108,10 @@ PHP;
 			$installedPackages[$package->getName()] = true;
 		}
 
+		ksort($data);
+		ksort($installedPackages);
+		ksort($notInstalledPackages);
+
 		$generatedConfigFileContents = sprintf(self::$generatedFileTemplate, var_export($data, true), var_export($notInstalledPackages, true));
 		file_put_contents($generatedConfigFilePath, $generatedConfigFileContents);
 		$io->write('<info>phpstan/extension-installer:</info> Extensions installed');
