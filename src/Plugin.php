@@ -4,7 +4,9 @@ namespace PHPStan\ExtensionInstaller;
 
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
+use Composer\Installer\InstallationManager;
 use Composer\IO\IOInterface;
+use Composer\Package\PackageInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
@@ -21,6 +23,22 @@ use function var_export;
 
 final class Plugin implements PluginInterface, EventSubscriberInterface
 {
+
+	/** @var int */
+	private $dirCount;
+
+	public function __construct()
+	{
+		$vendorPos = strpos(__DIR__, 'vendor');
+		if ($vendorPos === false) {
+			return;
+		}
+
+		// walk up to vendor
+		$basePathTail = substr(__DIR__, $vendorPos);
+		// how many parts?
+		$this->dirCount = substr_count($basePathTail, DIRECTORY_SEPARATOR) + 1;
+	}
 
 	/** @var string */
 	private static $generatedFileTemplate = <<<'PHP'
@@ -100,7 +118,7 @@ PHP;
 				continue;
 			}
 			$data[$package->getName()] = [
-				'install_path' => $installationManager->getInstallPath($package),
+				'install_path' => $this->getInstallPath($installationManager, $package),
 				'extra' => $package->getExtra()['phpstan'] ?? null,
 				'version' => $package->getFullPrettyVersion(),
 			];
@@ -113,6 +131,9 @@ PHP;
 		ksort($notInstalledPackages);
 
 		$generatedConfigFileContents = sprintf(self::$generatedFileTemplate, var_export($data, true), var_export($notInstalledPackages, true));
+		// move the __DIR__ outside the string
+		$generatedConfigFileContents = str_replace("'__DIR__", "__DIR__.'", $generatedConfigFileContents);
+
 		file_put_contents($generatedConfigFilePath, $generatedConfigFileContents);
 		$io->write('<info>phpstan/extension-installer:</info> Extensions installed');
 
@@ -127,6 +148,29 @@ PHP;
 		foreach (array_keys($notInstalledPackages) as $name) {
 			$io->write(sprintf('> <comment>%s:</comment> not supported', $name));
 		}
+	}
+
+	private function getInstallPath(InstallationManager $installationManager, PackageInterface $package): string
+	{
+		$installPath = $installationManager->getInstallPath($package);
+
+		// don't do anything if dirCount isn't valid
+		if ($this->dirCount === null) {
+			return $installPath;
+		}
+
+		// walk up to vendor
+		$vendorPos = strpos($installPath, 'vendor');
+		if ($vendorPos === false) {
+			return $installPath;
+		}
+
+		$installPathTail = substr($installPath, $vendorPos);
+
+		// combine all the bits together
+		$installPathArray = array_merge(['__DIR__'], array_fill(0, $this->dirCount, '..'), [$installPathTail]);
+
+		return implode(DIRECTORY_SEPARATOR, $installPathArray);
 	}
 
 }
