@@ -52,6 +52,16 @@ PHP;
 		// noop
 	}
 
+	public function deactivate(Composer $composer, IOInterface $io): void
+	{
+		// noop
+	}
+
+	public function uninstall(Composer $composer, IOInterface $io): void
+	{
+		// noop
+	}
+
 	public static function getSubscribedEvents(): array
 	{
 		return [
