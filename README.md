@@ -4,7 +4,7 @@
 [![Latest Stable Version](https://poser.pugx.org/phpstan/extension-installer/v/stable)](https://packagist.org/packages/phpstan/extension-installer)
 [![License](https://poser.pugx.org/phpstan/extension-installer/license)](https://packagist.org/packages/phpstan/extension-installer)
 
-Composer plugin for automatic installation of [PHPStan](https://github.com/phpstan/phpstan) extensions.
+Composer plugin for automatic installation of [PHPStan](https://phpstan.org/) extensions.
 
 # Motivation
 
