@@ -1,0 +1,45 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+
+name: "Integration tests"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  test:
+    name: "Integration test"
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      matrix:
+        php-version:
+          - "7.4"
+          - "8.0"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+
+      - name: "Install dependencies"
+        working-directory: "e2e"
+        run: "composer install --no-interaction --no-progress --no-suggest"
+
+      - name: "Test"
+        working-directory: "e2e"
+        run: "vendor/bin/phpstan analyse -l 8 FooTest.php"
+
+      - name: "Rename directory"
+        run: "mv e2e e3e"
+
+      - name: "Test relative paths - after renaming"
+        working-directory: "e3e"
+        run: "vendor/bin/phpstan analyse -l 8 FooTest.php"
