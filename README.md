@@ -52,9 +52,7 @@ And that's it.
 
 It's best (but optional) to set the extension's composer package [type](https://getcomposer.org/doc/04-schema.md#type) to `phpstan-extension` for this plugin to be able to recognize it and to be [discoverable on Packagist](https://packagist.org/explore/?type=phpstan-extension).
 
-Only one feature is supported right now: PHPStan is able to automatically include the extension's config files, without you having to mention them in your `phpstan.neon`'s `includes` section.
-
-For this, you have to add a `phpstan` key in the extension `composer.json`'s `extra` section like so:
+Add `phpstan` key in the extension `composer.json`'s `extra` section:
 
 ```json
 {
