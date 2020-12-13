@@ -8,6 +8,7 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use Composer\Util\Filesystem;
 use function array_keys;
 use function file_exists;
 use function file_put_contents;
@@ -94,6 +95,7 @@ PHP;
 		$installedPackages = [];
 
 		$data = [];
+		$fs = new Filesystem();
 		foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
 			if (
 				$package->getType() !== 'phpstan-extension'
@@ -112,8 +114,10 @@ PHP;
 				}
 				continue;
 			}
+			$absoluteInstallPath = $installationManager->getInstallPath($package);
 			$data[$package->getName()] = [
-				'install_path' => $installationManager->getInstallPath($package),
+				'install_path' => $absoluteInstallPath,
+				'relative_install_path' => $fs->findShortestPath(dirname($generatedConfigFilePath), $absoluteInstallPath, true),
 				'extra' => $package->getExtra()['phpstan'] ?? null,
 				'version' => $package->getFullPrettyVersion(),
 			];
