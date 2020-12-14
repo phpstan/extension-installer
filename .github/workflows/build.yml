@@ -62,9 +62,6 @@ jobs:
       - name: "Install dependencies"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
-      - name: "Lint"
-        run: "vendor/bin/phing lint"
-
       - name: "Coding Standard"
         run: "vendor/bin/phing cs"
 
