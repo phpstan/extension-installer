@@ -69,3 +69,12 @@ Add `phpstan` key in the extension `composer.json`'s `extra` section:
 ## Limitations
 
 The extension installer depends on Composer script events, therefore you cannot use `--no-scripts` flag.
+
+If you really need this, you can add this to your own `composer.json`:
+```json
+    "scripts": {
+        "install-phpstan-extensions": "PHPStan\\ExtensionInstaller\\Plugin::process"
+    }
+```
+
+Then you can install it manually with `composer run install-phpstan-extensions`.
