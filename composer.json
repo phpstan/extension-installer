@@ -12,7 +12,6 @@
     },
     "require-dev": {
         "composer/composer": "^2.0",
-        "phing/phing": "^2.16.3",
         "php-parallel-lint/php-parallel-lint": "^1.2.0",
         "phpstan/phpstan-strict-rules": "^0.11 || ^0.12"
     },
