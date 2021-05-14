@@ -39,7 +39,7 @@ jobs:
         run: "composer install --no-interaction --no-progress --no-suggest"
 
       - name: "Lint"
-        run: "vendor/bin/phing lint"
+        run: "make lint"
 
   coding-standards:
     name: "Coding Standard"
@@ -63,10 +63,10 @@ jobs:
         run: "composer install --no-interaction --no-progress --no-suggest"
 
       - name: "Lint"
-        run: "vendor/bin/phing lint"
+        run: "make lint"
 
       - name: "Coding Standard"
-        run: "vendor/bin/phing cs"
+        run: "make cs"
 
   static-analysis:
     name: "PHPStan"
@@ -110,4 +110,4 @@ jobs:
         run: "composer require --dev phpstan/phpstan:'^0.12.60' --update-with-dependencies"
 
       - name: "PHPStan"
-        run: "vendor/bin/phing phpstan"
+        run: "make phpstan"

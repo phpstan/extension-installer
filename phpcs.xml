@@ -1,6 +1,13 @@
 <?xml version="1.0"?>
 <ruleset name="PHPStan extension installer">
-	<rule ref="build-cs/vendor/consistence/coding-standard/Consistence/ruleset.xml">
+	<arg name="colors"/>
+	<arg name="extensions" value="php"/>
+	<arg name="encoding" value="utf-8"/>
+	<arg name="tab-width" value="4"/>
+	<arg name="cache" value="tmp/cache/phpcs"/>
+	<arg value="sp"/>
+	<file>src</file>
+	<rule ref="build-cs/vendor/consistence-community/coding-standard/Consistence/ruleset.xml">
 		<exclude name="Squiz.Functions.GlobalFunction.Found"/>
 		<exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameAfterKeyword"/>
 		<exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation"/>
