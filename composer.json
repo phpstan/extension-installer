@@ -13,7 +13,7 @@
     "require-dev": {
         "composer/composer": "^2.0",
         "php-parallel-lint/php-parallel-lint": "^1.2.0",
-        "phpstan/phpstan-strict-rules": "^0.11 || ^0.12"
+        "phpstan/phpstan-strict-rules": "^0.11 || ^0.12 || ^1.0"
     },
     "config": {
         "sort-packages": true
