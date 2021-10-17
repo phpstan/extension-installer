@@ -97,10 +97,7 @@ PHP;
 		$data = [];
 		$fs = new Filesystem();
 		foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
-			if (
-				$package->getType() !== 'phpstan-extension'
-				&& !isset($package->getExtra()['phpstan'])
-			) {
+			if (!isset($package->getExtra()['phpstan'])) {
 				if (
 					strpos($package->getName(), 'phpstan') !== false
 					&& !in_array($package->getName(), [
