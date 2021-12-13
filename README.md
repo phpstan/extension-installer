@@ -46,7 +46,13 @@ index 1b578dd624..f6ebf6e477 100644
 composer require --dev phpstan/extension-installer
 ```
 
-And that's it.
+Starting from Composer 2.2.0 you'll get the following question:
+```
+phpstan/extension-installer contains a Composer plugin which is currently not in your allow-plugins config. See https://getcomposer.org/allow-plugins
+Do you trust "phpstan/extension-installer" to execute code and wish to enable it now? (writes "allow-plugins" to composer.json) [y,n,d,?]
+```
+
+Answer with `y` to allow the plugin.
 
 ## Instructions for extension developers
 
