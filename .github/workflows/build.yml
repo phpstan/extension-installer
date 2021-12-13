@@ -107,7 +107,7 @@ jobs:
 
       - name: "Update PHPStan"
         if: matrix.php-version == '8.0'
-        run: "composer require --dev phpstan/phpstan:'^0.12.60' --update-with-dependencies"
+        run: "composer require phpstan/phpstan:'^1.2' phpstan/phpstan-strict-rules:'^1.1' --with-all-dependencies"
 
       - name: "PHPStan"
         run: "make phpstan"
