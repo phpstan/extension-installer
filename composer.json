@@ -8,7 +8,7 @@
     "require": {
         "php": "^7.1 || ^8.0",
         "composer-plugin-api": "^1.1 || ^2.0",
-        "phpstan/phpstan": ">=0.11.6"
+        "phpstan/phpstan": ">=0.12.19"
     },
     "require-dev": {
         "composer/composer": "^2.0",

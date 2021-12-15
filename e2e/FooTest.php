@@ -18,4 +18,12 @@ class FooTest extends TestCase
 
 	}
 
+	/**
+	 * @return string
+	 */
+	protected function testRootPackageConfigInstall()
+	{
+		return 10;
+	}
+
 }

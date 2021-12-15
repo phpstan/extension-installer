@@ -94,9 +94,12 @@ PHP;
 		$notInstalledPackages = [];
 		$installedPackages = [];
 
+		$rootPackage = $composer->getPAckage(); // @phpstan-ignore-line getpackage() for Composer v1, getPackage() for Composer v2
+		$dependencyPackages = $composer->getRepositoryManager()->getLocalRepository()->getPackages();
+
 		$data = [];
 		$fs = new Filesystem();
-		foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
+		foreach (array_merge([$rootPackage], $dependencyPackages) as $package) {
 			if (
 				$package->getType() !== 'phpstan-extension'
 				&& !isset($package->getExtra()['phpstan'])
@@ -114,8 +117,13 @@ PHP;
 				}
 				continue;
 			}
-			$absoluteInstallPath = $installationManager->getInstallPath($package);
-			$data[$package->getName()] = [
+
+			$isRootPackage = $package === $rootPackage;
+			$packageName = $isRootPackage ? 'root (' . $package->getName() . ')' : $package->getName();
+			$absoluteInstallPath = $isRootPackage
+				? dirname($composer->getConfig()->getConfigSource()->getName())
+				: $installationManager->getInstallPath($package);
+			$data[$packageName] = [
 				'install_path' => $absoluteInstallPath,
 				'relative_install_path' => $fs->findShortestPath(dirname($generatedConfigFilePath), $absoluteInstallPath, true),
 				'extra' => $package->getExtra()['phpstan'] ?? null,

@@ -1,0 +1,6 @@
+parameters:
+    ignoreErrors:
+        -
+            path: FooTest.php
+            message: '~^Method App\\FooTest::testRootPackageConfigInstall\(\) should return string but returns int\.$~'
+            count: 1

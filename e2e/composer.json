@@ -13,5 +13,12 @@
 				"symlink": false
 			}
 		}
-	]
+	],
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "phpstan-ext.neon"
+            ]
+        }
+    }
 }
