@@ -82,6 +82,7 @@ jobs:
           - "7.3"
           - "7.4"
           - "8.0"
+          - "8.1"
         dependencies:
           - "lowest"
           - "highest"
@@ -107,7 +108,7 @@ jobs:
         run: "composer update --no-interaction --no-progress"
 
       - name: "Update PHPStan"
-        if: matrix.php-version == '8.0'
+        if: matrix.php-version == '8.0' || matrix.php-version == '8.1'
         run: "composer require phpstan/phpstan:'^1.2' phpstan/phpstan-strict-rules:'^1.1' --with-all-dependencies"
 
       - name: "PHPStan"
