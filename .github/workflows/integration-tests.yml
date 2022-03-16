@@ -21,6 +21,11 @@ jobs:
         php-version:
           - "7.4"
           - "8.0"
+          - "8.1"
+        composer-version:
+          - "v2"
+          - "preview"
+          - "snapshot"
 
     steps:
       - name: "Checkout"
@@ -31,6 +36,7 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          tools: "composer:${{ matrix.composer-version }}"
 
       - name: "Install dependencies"
         working-directory: "e2e"
