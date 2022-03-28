@@ -6,10 +6,10 @@ on:
   pull_request:
   push:
     branches:
-      - "master"
+      - "1.2.x"
 
 env:
-  COMPOSER_ROOT_VERSION: "master"
+  COMPOSER_ROOT_VERSION: "1.2.x"
 
 jobs:
   test:
