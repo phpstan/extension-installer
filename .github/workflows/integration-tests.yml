@@ -9,7 +9,7 @@ on:
       - "1.2.x"
 
 env:
-  COMPOSER_ROOT_VERSION: "1.2.x"
+  COMPOSER_ROOT_VERSION: "1.2.x-dev"
 
 jobs:
   test:
