@@ -1,7 +1,7 @@
 {
 	"require": {
 		"phpstan/phpstan": "^0.12.62",
-		"phpstan/extension-installer": "dev-master",
+		"phpstan/extension-installer": "1.2.x-dev",
 		"phpstan/phpstan-phpunit": "^0.12.17",
 		"phpunit/phpunit": "^9.5"
 	},
