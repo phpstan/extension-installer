@@ -10,6 +10,7 @@ use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use Composer\Util\Filesystem;
 use function array_keys;
+use function array_merge;
 use function dirname;
 use function file_exists;
 use function file_put_contents;
