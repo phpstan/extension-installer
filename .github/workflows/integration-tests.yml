@@ -6,10 +6,10 @@ on:
   pull_request:
   push:
     branches:
-      - "master"
+      - "1.2.x"
 
 env:
-  COMPOSER_ROOT_VERSION: "master"
+  COMPOSER_ROOT_VERSION: "1.2.x-dev"
 
 jobs:
   test:
@@ -21,16 +21,22 @@ jobs:
         php-version:
           - "7.4"
           - "8.0"
+          - "8.1"
+        composer-version:
+          - "v2"
+          - "preview"
+          - "snapshot"
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: actions/checkout@v3
 
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          tools: "composer:${{ matrix.composer-version }}"
 
       - name: "Install dependencies"
         working-directory: "e2e"

@@ -6,7 +6,7 @@ on:
   pull_request:
   push:
     branches:
-      - "master"
+      - "1.2.x"
 
 jobs:
   lint:
@@ -16,15 +16,15 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.1"
           - "7.2"
           - "7.3"
           - "7.4"
           - "8.0"
+          - "8.1"
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: actions/checkout@v3
 
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
@@ -36,7 +36,7 @@ jobs:
         run: "composer validate"
 
       - name: "Install dependencies"
-        run: "composer install --no-interaction --no-progress --no-suggest"
+        run: "composer install --no-interaction --no-progress"
 
       - name: "Lint"
         run: "make lint"
@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: actions/checkout@v3
 
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
@@ -60,7 +60,7 @@ jobs:
         run: "composer validate"
 
       - name: "Install dependencies"
-        run: "composer install --no-interaction --no-progress --no-suggest"
+        run: "composer install --no-interaction --no-progress"
 
       - name: "Lint"
         run: "make lint"
@@ -76,18 +76,18 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - "7.1"
           - "7.2"
           - "7.3"
           - "7.4"
           - "8.0"
+          - "8.1"
         dependencies:
           - "lowest"
           - "highest"
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: actions/checkout@v3
 
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
@@ -99,14 +99,14 @@ jobs:
 
       - name: "Install lowest dependencies"
         if: ${{ matrix.dependencies == 'lowest' }}
-        run: "composer update --prefer-lowest --no-interaction --no-progress --no-suggest"
+        run: "composer update --prefer-lowest --no-interaction --no-progress"
 
       - name: "Install highest dependencies"
         if: ${{ matrix.dependencies == 'highest' }}
-        run: "composer update --no-interaction --no-progress --no-suggest"
+        run: "composer update --no-interaction --no-progress"
 
       - name: "Update PHPStan"
-        if: matrix.php-version == '8.0'
+        if: matrix.php-version == '8.0' || matrix.php-version == '8.1'
         run: "composer require phpstan/phpstan:'^1.2' phpstan/phpstan-strict-rules:'^1.1' --with-all-dependencies"
 
       - name: "PHPStan"

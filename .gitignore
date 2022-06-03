@@ -1,4 +1,4 @@
 /src/GeneratedConfig.php
 /vendor
-composer.lock
+/composer.lock
 .phpunit.result.cache
