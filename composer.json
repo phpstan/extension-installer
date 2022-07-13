@@ -16,7 +16,10 @@
         "phpstan/phpstan-strict-rules": "^0.11 || ^0.12 || ^1.0"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "ocramius/package-versions": true
+        }
     },
     "extra": {
         "class": "PHPStan\\ExtensionInstaller\\Plugin"
