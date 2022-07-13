@@ -13,5 +13,10 @@
 				"symlink": false
 			}
 		}
-	]
+	],
+	"config": {
+		"allow-plugins": {
+			"phpstan/extension-installer": true
+		}
+	}
 }
