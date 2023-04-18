@@ -1,0 +1,35 @@
+{
+	"require": {
+		"phpstan/phpstan": "^1.8.0",
+		"phpstan/extension-installer": "1.2.x-dev",
+		"testing/test-extension": "^1.0"
+	},
+	"repositories": [
+		{
+			"type": "path",
+			"url": "../..",
+			"options": {
+				"symlink": false
+			}
+		},
+		{
+			"type": "path",
+			"url": "../test-extension",
+			"options": {
+				"symlink": false
+			}
+		}
+	],
+	"config": {
+		"allow-plugins": {
+			"phpstan/extension-installer": true
+		}
+	},
+	"extra": {
+		"phpstan/extension-installer": {
+			"ignore": [
+				"testing/test-extension"
+			]
+		}
+	}
+}

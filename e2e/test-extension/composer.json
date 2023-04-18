@@ -1,0 +1,11 @@
+{
+    "version": "1.0",
+    "name": "testing/test-extension",
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "extension.neon"
+            ]
+        }
+    }
+}

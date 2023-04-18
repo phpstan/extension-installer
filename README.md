@@ -72,6 +72,22 @@ Add `phpstan` key in the extension `composer.json`'s `extra` section:
 }
 ```
 
+## Ignoring a particular extension
+
+You may want to disable auto-installation of a particular extension to handle installation manually. Ignore an extension by adding an `extra.phpstan/extension-installer.ignore` array in `composer.json` that specifies a list of packages to ignore:
+
+```json
+{
+  "extra": {
+    "phpstan/extension-installer": {
+      "ignore": [
+        "phpstan/phpstan-phpunit"
+      ]
+    }
+  }
+}
+```
+
 ## Limitations
 
 The extension installer depends on Composer script events, therefore you cannot use `--no-scripts` flag.

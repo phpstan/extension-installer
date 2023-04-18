@@ -22,7 +22,10 @@
         }
     },
     "extra": {
-        "class": "PHPStan\\ExtensionInstaller\\Plugin"
+        "class": "PHPStan\\ExtensionInstaller\\Plugin",
+        "phpstan/extension-installer": {
+            "ignore": ["phpstan/phpstan-phpunit"]
+        }
     },
     "autoload": {
         "psr-4": {

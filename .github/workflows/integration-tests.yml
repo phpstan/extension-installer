@@ -12,7 +12,7 @@ env:
   COMPOSER_ROOT_VERSION: "1.2.x-dev"
 
 jobs:
-  test:
+  integration-test:
     name: "Integration test"
     runs-on: "ubuntu-latest"
 
@@ -40,16 +40,52 @@ jobs:
           tools: "composer:${{ matrix.composer-version }}"
 
       - name: "Install dependencies"
-        working-directory: "e2e"
+        working-directory: "e2e/integration"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
       - name: "Test"
-        working-directory: "e2e"
+        working-directory: "e2e/integration"
         run: "vendor/bin/phpstan analyse -l 8 FooTest.php"
 
       - name: "Rename directory"
-        run: "mv e2e e3e"
+        working-directory: "e2e"
+        run: "mv integration integration-copy"
 
       - name: "Test relative paths - after renaming"
-        working-directory: "e3e"
+        working-directory: "e2e/integration-copy"
         run: "vendor/bin/phpstan analyse -l 8 FooTest.php"
+
+  ignore-test:
+    name: "Ignore test"
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      matrix:
+        php-version:
+          - "7.4"
+          - "8.0"
+          - "8.1"
+          - "8.2"
+        composer-version:
+          - "v2"
+          - "preview"
+          - "snapshot"
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          tools: "composer:${{ matrix.composer-version }}"
+
+      - name: "Install dependencies"
+        working-directory: "e2e/ignore"
+        run: "composer install --no-interaction --no-progress --no-suggest"
+
+      - name: "Test"
+        working-directory: "e2e/ignore"
+        run: "vendor/bin/phpstan analyse -l 8 IgnoreTest.php"
