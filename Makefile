@@ -16,4 +16,4 @@ cs-fix:
 
 .PHONY: phpstan
 phpstan:
-	php vendor/bin/phpstan analyse -l 7 -c phpstan.neon src
+	php vendor/bin/phpstan
