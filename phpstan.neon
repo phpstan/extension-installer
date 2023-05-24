@@ -5,3 +5,9 @@ parameters:
 	level: 8
 	paths:
 		- src
+
+	ignoreErrors:
+		-
+			message: '#^Strict comparison using \=\=\= between string and null will always evaluate to false\.$#'
+			reportUnmatched: false
+			path: src/Plugin.php

@@ -135,6 +135,9 @@ PHP;
 			}
 
 			$installPath = $installationManager->getInstallPath($package);
+			if ($installPath === null) {
+				continue;
+			}
 
 			$absoluteInstallPath = $fs->isAbsolutePath($installPath)
 				? $installPath
