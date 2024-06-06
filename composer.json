@@ -7,7 +7,7 @@
     ],
     "require": {
         "php": "^7.2 || ^8.0",
-        "composer-plugin-api": "^2.0",
+        "composer-plugin-api": "^2.6.0",
         "phpstan/phpstan": "^1.9.0"
     },
     "require-dev": {
