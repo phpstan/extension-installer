@@ -158,6 +158,12 @@ PHP;
 			$phpstanConstraint = null;
 			if (array_key_exists('phpstan/phpstan', $packageRequires)) {
 				$phpstanConstraint = $packageRequires['phpstan/phpstan']->getConstraint();
+				if ($phpstanConstraint->getLowerBound()->isZero()) {
+					continue;
+				}
+				if ($phpstanConstraint->getUpperBound()->isPositiveInfinity()) {
+					continue;
+				}
 				$phpstanVersionConstraints[] = $phpstanConstraint;
 			}
 
