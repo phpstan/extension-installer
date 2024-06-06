@@ -6,10 +6,10 @@ on:
   pull_request:
   push:
     branches:
-      - "1.2.x"
+      - "1.4.x"
 
 env:
-  COMPOSER_ROOT_VERSION: "1.2.x-dev"
+  COMPOSER_ROOT_VERSION: "1.4.x-dev"
 
 jobs:
   integration-test:
