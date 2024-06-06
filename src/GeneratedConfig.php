@@ -19,7 +19,6 @@ final class GeneratedConfig
 
 	public const NOT_INSTALLED = [];
 
-	/** @var string|null */
 	public const PHPSTAN_VERSION_CONSTRAINT = null;
 
 	private function __construct()

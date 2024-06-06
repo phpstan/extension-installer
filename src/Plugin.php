@@ -14,6 +14,7 @@ use Composer\Util\Filesystem;
 use function array_key_exists;
 use function array_keys;
 use function class_exists;
+use function count;
 use function dirname;
 use function file_exists;
 use function file_put_contents;
@@ -162,9 +163,11 @@ PHP;
 			$installedPackages[$package->getName()] = true;
 
 			$packageRequires = $package->getRequires();
-			if (array_key_exists('phpstan/phpstan', $packageRequires)) {
-				$phpstanVersionConstraints[] = $packageRequires['phpstan/phpstan']->getConstraint();
+			if (!array_key_exists('phpstan/phpstan', $packageRequires)) {
+				continue;
 			}
+
+			$phpstanVersionConstraints[] = $packageRequires['phpstan/phpstan']->getConstraint();
 		}
 
 		$phpstanVersionConstraint = null;
