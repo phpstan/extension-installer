@@ -153,21 +153,22 @@ PHP;
 				? $installPath
 				: getcwd() . DIRECTORY_SEPARATOR . $installPath;
 
+			$packageRequires = $package->getRequires();
+			$phpstanConstraint = null;
+			if (array_key_exists('phpstan/phpstan', $packageRequires)) {
+				$phpstanConstraint = $packageRequires['phpstan/phpstan']->getConstraint();
+				$phpstanVersionConstraints[] = $phpstanConstraint;
+			}
+
 			$data[$package->getName()] = [
 				'install_path' => $absoluteInstallPath,
 				'relative_install_path' => $fs->findShortestPath(dirname($generatedConfigFilePath), $absoluteInstallPath, true),
 				'extra' => $package->getExtra()['phpstan'] ?? null,
 				'version' => $package->getFullPrettyVersion(),
+				'phpstanVersionConstraint' => $phpstanConstraint !== null ? (string) $phpstanConstraint : null,
 			];
 
 			$installedPackages[$package->getName()] = true;
-
-			$packageRequires = $package->getRequires();
-			if (!array_key_exists('phpstan/phpstan', $packageRequires)) {
-				continue;
-			}
-
-			$phpstanVersionConstraints[] = $packageRequires['phpstan/phpstan']->getConstraint();
 		}
 
 		$phpstanVersionConstraint = null;
