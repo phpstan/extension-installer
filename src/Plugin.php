@@ -8,8 +8,12 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use Composer\Semver\Constraint\MultiConstraint;
+use Composer\Semver\Intervals;
 use Composer\Util\Filesystem;
+use function array_key_exists;
 use function array_keys;
+use function class_exists;
 use function dirname;
 use function file_exists;
 use function file_put_contents;
@@ -44,6 +48,9 @@ final class GeneratedConfig
 	public const EXTENSIONS = %s;
 
 	public const NOT_INSTALLED = %s;
+
+	/** @var string|null */
+	public const PHPSTAN_VERSION_CONSTRAINT = %s;
 
 	private function __construct()
 	{
@@ -110,6 +117,8 @@ PHP;
 			$ignore = $packageExtra['phpstan/extension-installer']['ignore'];
 		}
 
+		$phpstanVersionConstraints = [];
+
 		foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
 			if (
 				$package->getType() !== 'phpstan-extension'
@@ -151,6 +160,28 @@ PHP;
 			];
 
 			$installedPackages[$package->getName()] = true;
+
+			$packageRequires = $package->getRequires();
+			if (array_key_exists('phpstan/phpstan', $packageRequires)) {
+				$phpstanVersionConstraints[] = $packageRequires['phpstan/phpstan']->getConstraint();
+			}
+		}
+
+		$phpstanVersionConstraint = null;
+		if (count($phpstanVersionConstraints) > 0 && class_exists(Intervals::class)) {
+			if (count($phpstanVersionConstraints) === 1) {
+				$multiConstraint = $phpstanVersionConstraints[0];
+			} else {
+				$multiConstraint = new MultiConstraint($phpstanVersionConstraints);
+			}
+			$compactedConstraint = Intervals::compactConstraint($multiConstraint);
+			$phpstanVersionConstraint = sprintf(
+				'%s%s && %s%s',
+				$compactedConstraint->getLowerBound()->isInclusive() ? '>=' : '>',
+				$compactedConstraint->getLowerBound()->getVersion(),
+				$compactedConstraint->getUpperBound()->isInclusive() ? '<=' : '<',
+				$compactedConstraint->getUpperBound()->getVersion()
+			);
 		}
 
 		ksort($data);
@@ -158,7 +189,7 @@ PHP;
 		ksort($notInstalledPackages);
 		sort($ignoredPackages);
 
-		$generatedConfigFileContents = sprintf(self::$generatedFileTemplate, var_export($data, true), var_export($notInstalledPackages, true));
+		$generatedConfigFileContents = sprintf(self::$generatedFileTemplate, var_export($data, true), var_export($notInstalledPackages, true), var_export($phpstanVersionConstraint, true));
 		file_put_contents($generatedConfigFilePath, $generatedConfigFileContents);
 		$io->write('<info>phpstan/extension-installer:</info> Extensions installed');
 
