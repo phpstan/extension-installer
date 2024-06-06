@@ -217,7 +217,7 @@ PHP;
 	private function constraintIntoString(ConstraintInterface $constraint): string
 	{
 		return sprintf(
-			'%s%s && %s%s',
+			'%s%s, %s%s',
 			$constraint->getLowerBound()->isInclusive() ? '>=' : '>',
 			$constraint->getLowerBound()->getVersion(),
 			$constraint->getUpperBound()->isInclusive() ? '<=' : '<',
