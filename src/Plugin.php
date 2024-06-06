@@ -8,6 +8,7 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use Composer\Semver\Constraint\ConstraintInterface;
 use Composer\Semver\Constraint\MultiConstraint;
 use Composer\Semver\Intervals;
 use Composer\Util\Filesystem;
@@ -165,7 +166,7 @@ PHP;
 				'relative_install_path' => $fs->findShortestPath(dirname($generatedConfigFilePath), $absoluteInstallPath, true),
 				'extra' => $package->getExtra()['phpstan'] ?? null,
 				'version' => $package->getFullPrettyVersion(),
-				'phpstanVersionConstraint' => $phpstanConstraint !== null ? (string) $phpstanConstraint : null,
+				'phpstanVersionConstraint' => $phpstanConstraint !== null ? $this->constraintIntoString($phpstanConstraint) : null,
 			];
 
 			$installedPackages[$package->getName()] = true;
@@ -178,14 +179,7 @@ PHP;
 			} else {
 				$multiConstraint = new MultiConstraint($phpstanVersionConstraints);
 			}
-			$compactedConstraint = Intervals::compactConstraint($multiConstraint);
-			$phpstanVersionConstraint = sprintf(
-				'%s%s && %s%s',
-				$compactedConstraint->getLowerBound()->isInclusive() ? '>=' : '>',
-				$compactedConstraint->getLowerBound()->getVersion(),
-				$compactedConstraint->getUpperBound()->isInclusive() ? '<=' : '<',
-				$compactedConstraint->getUpperBound()->getVersion()
-			);
+			$phpstanVersionConstraint = $this->constraintIntoString(Intervals::compactConstraint($multiConstraint));
 		}
 
 		ksort($data);
@@ -212,6 +206,17 @@ PHP;
 		foreach ($ignoredPackages as $name) {
 			$io->write(sprintf('> <comment>%s:</comment> ignored', $name));
 		}
+	}
+
+	private function constraintIntoString(ConstraintInterface $constraint): string
+	{
+		return sprintf(
+			'%s%s && %s%s',
+			$constraint->getLowerBound()->isInclusive() ? '>=' : '>',
+			$constraint->getLowerBound()->getVersion(),
+			$constraint->getUpperBound()->isInclusive() ? '<=' : '<',
+			$constraint->getUpperBound()->getVersion()
+		);
 	}
 
 }
