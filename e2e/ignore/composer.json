@@ -1,6 +1,6 @@
 {
 	"require": {
-		"phpstan/phpstan": "^1.8.0",
+		"phpstan/phpstan": "^2.1.0",
 		"phpstan/extension-installer": "1.4.x-dev",
 		"testing/test-extension": "^1.0"
 	},

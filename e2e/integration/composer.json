@@ -1,8 +1,8 @@
 {
 	"require": {
-		"phpstan/phpstan": "^1.8.0",
+		"phpstan/phpstan": "^2.1.0",
 		"phpstan/extension-installer": "1.4.x-dev",
-		"phpstan/phpstan-phpunit": "^1.1.1",
+		"phpstan/phpstan-phpunit": "^2.0",
 		"phpunit/phpunit": "^9.5"
 	},
 	"repositories": [
