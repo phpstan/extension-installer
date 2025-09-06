@@ -34,8 +34,7 @@ use const DIRECTORY_SEPARATOR;
 final class Plugin implements PluginInterface, EventSubscriberInterface
 {
 
-	/** @var string */
-	private static $generatedFileTemplate = <<<'PHP'
+	private static string $generatedFileTemplate = <<<'PHP'
 <?php declare(strict_types = 1);
 
 namespace PHPStan\ExtensionInstaller;
@@ -221,7 +220,7 @@ PHP;
 			$constraint->getLowerBound()->isInclusive() ? '>=' : '>',
 			$constraint->getLowerBound()->getVersion(),
 			$constraint->getUpperBound()->isInclusive() ? '<=' : '<',
-			$constraint->getUpperBound()->getVersion()
+			$constraint->getUpperBound()->getVersion(),
 		);
 	}
 
