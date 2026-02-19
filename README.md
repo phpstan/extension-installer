@@ -72,6 +72,14 @@ Add `phpstan` key in the extension `composer.json`'s `extra` section:
 }
 ```
 
+## Console output
+
+After each `composer install` or `composer update`, the plugin reports per-package status when the configuration changes:
+
+- **installed** — the extension was successfully registered.
+- **not supported** — a package has `phpstan` in its name but is not configured as a PHPStan extension (missing the `phpstan-extension` type and `extra.phpstan` key). This may indicate the package requires manual `includes` configuration.
+- **ignored** — the extension was skipped due to the ignore list (see below).
+
 ## Ignoring a particular extension
 
 You may want to disable auto-installation of a particular extension to handle installation manually. Ignore an extension by adding an `extra.phpstan/extension-installer.ignore` array in `composer.json` that specifies a list of packages to ignore:
