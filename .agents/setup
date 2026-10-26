@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Prepares an Amp orb for this repository: PHP, Composer, project dependencies,
+# and the phpstan/build-cs coding standard so `make check` works out of the box.
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+step() {
+	echo "==> $1"
+	SECONDS=0
+}
+
+done_step() {
+	echo "    done in ${SECONDS}s"
+}
+
+export DEBIAN_FRONTEND=noninteractive
+export COMPOSER_NO_INTERACTION=1
+
+step "System packages (PHP 8.2 CLI and extensions)"
+packages=(php8.2-cli php8.2-mbstring php8.2-xml php8.2-curl php8.2-zip unzip git make)
+missing=()
+for pkg in "${packages[@]}"; do
+	dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null | grep -q "install ok installed" || missing+=("$pkg")
+done
+if ((${#missing[@]})); then
+	sudo apt-get update -qq
+	sudo apt-get install -y -qq --no-install-recommends "${missing[@]}"
+fi
+php -v | head -n1
+done_step
+
+step "Composer 2"
+if ! command -v composer >/dev/null 2>&1; then
+	tmpdir="$(mktemp -d)"
+	curl -fsSL -o "$tmpdir/composer.phar" https://getcomposer.org/download/latest-2.x/composer.phar
+	expected="$(curl -fsSL https://getcomposer.org/download/latest-2.x/composer.phar.sha256)"
+	echo "${expected%% *}  $tmpdir/composer.phar" | sha256sum -c --quiet -
+	sudo install -m 0755 "$tmpdir/composer.phar" /usr/local/bin/composer
+	rm -rf -- "$tmpdir"
+fi
+composer --version
+done_step
+
+step "Project dependencies (composer install)"
+composer install --no-progress
+done_step
+
+step "Coding standard (phpstan/build-cs 2.x)"
+if [ ! -d build-cs/.git ]; then
+	git clone --quiet --branch 2.x https://github.com/phpstan/build-cs.git build-cs
+else
+	git -C build-cs fetch --quiet origin 2.x
+	git -C build-cs reset --quiet --hard origin/2.x
+fi
+composer install --no-progress --working-dir build-cs
+done_step
