@@ -138,9 +138,5 @@ jobs:
         if: ${{ matrix.dependencies == 'highest' }}
         run: "composer update --no-interaction --no-progress"
 
-      - name: "Update PHPStan"
-        if: matrix.php-version == '8.0' || matrix.php-version == '8.1'
-        run: "composer require phpstan/phpstan:'^1.2' phpstan/phpstan-strict-rules:'^1.1' --with-all-dependencies"
-
       - name: "PHPStan"
         run: "make phpstan"
