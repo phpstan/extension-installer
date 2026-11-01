@@ -4,11 +4,15 @@ on:
   schedule:
     - cron: '13 0 * * *'
 
-permissions:
-  contents: read
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
   lock:
+    name: Lock closed issues
     permissions:
       issues: write  # for dessant/lock-threads to lock issues
     runs-on: ubuntu-latest
