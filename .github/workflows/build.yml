@@ -11,6 +11,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   lint:
     name: "Lint"
@@ -35,9 +39,11 @@ jobs:
 
       - name: "Checkout"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962" # v2.40.0
+        uses: "shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962" # 2.40.0
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -64,16 +70,11 @@ jobs:
 
       - name: "Checkout"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: "Checkout build-cs"
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          repository: "phpstan/build-cs"
-          path: "build-cs"
-          ref: "2.x"
+          persist-credentials: false
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962" # v2.40.0
+        uses: "shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962" # 2.40.0
         with:
           coverage: "none"
           php-version: "8.2"
@@ -84,9 +85,8 @@ jobs:
       - name: "Install dependencies"
         run: "composer install --no-interaction --no-progress"
 
-      - name: "Install build-cs dependencies"
-        working-directory: "build-cs"
-        run: "composer install --no-interaction --no-progress"
+      - name: "Install build-cs"
+        run: "make cs-install"
 
       - name: "Lint"
         run: "make lint"
@@ -121,9 +121,11 @@ jobs:
 
       - name: "Checkout"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962" # v2.40.0
+        uses: "shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962" # 2.40.0
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"

@@ -1,0 +1,17 @@
+# https://github.com/boostsecurityio/poutine#acknowledging-findings
+skip:
+  # Third-party actions from creators that are not GitHub-verified.
+  # They have been reviewed and are pinned to full commit SHAs.
+  # New actions are still reported until they are added here.
+  - rule: github_action_from_unverified_creator_used
+    purl:
+      - pkg:githubactions/astral-sh/setup-uv
+      - pkg:githubactions/cbrgm/mastodon-github-action
+      - pkg:githubactions/dessant/lock-threads
+      - pkg:githubactions/eomm/why-don-t-you-tweet
+      - pkg:githubactions/metcalfc/changelog-generator
+      - pkg:githubactions/rickstaa/action-create-tag
+      - pkg:githubactions/shivammathur/setup-php
+      - pkg:githubactions/synacktiv/action-octoscan
+      - pkg:githubactions/wyrihaximus/github-action-get-previous-tag
+      - pkg:githubactions/wyrihaximus/github-action-next-semvers
